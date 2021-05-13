@@ -1,10 +1,10 @@
-# neon4msb: NEON Data Explorer
+# NEON Data Examples
 
-Notes on Using NEON Data for the MSB Project
+Notes and example code for using NEON Data for the MSB Project
 
- * **this is in draft form and contributions are needed** *
 
-NEON data is very complex and thoroughly documented.  However, When approaching NEON data and it's download processes, you are confronted with many decisions. 
+
+All everyone in the project knows, NEON data is very complex and thoroughly documented.  However, when approaching NEON data and it's download processes, you are confronted with many decisions. 
 
 This repository is here to provide some example code and to summarize some of the ways  to acquire NEON data for an analysis.  Note NEON has provided amazing documentation and tools to help get started, but there is a learning curve.  This project's documentation and code is no substitute for their tutorials.  We encourage you to begin with [NEON's getting started guide](https://www.neonscience.org/resources/getting-started-neon-data-resources), but to come back and see a couple of options, and some practices for the MSB project.  
 
@@ -45,8 +45,8 @@ NEON data is available as zip files per year per site, and to combine them they 
  zooplankton<-neon_get_product_all_sites(dpID, neon_token)
  zooplankton_processed_data <- zooplankton$zoo_taxonomyProcessed
  nrow(zooplankton_processed_data)
- ```
- 
+```
+
 However you don't want to do this every time you want to run an analysis, so you may want to save into the L0 folder for your project on the MSB google shared drive (e.g. on your computur), and read in the file in from our local store
 
  ```R
@@ -55,7 +55,7 @@ However you don't want to do this every time you want to run an analysis, so you
  data_folder = "/Volumes/GoogleDrive/Shared drives/MacrosystemsBiodiversity/data/organism/L0"
  file_name="zooplankton.csv"
  write.csv(zooplankton_processed_data, file.path( data_folder, file_name))
-```
+ ```
 
 #### Taxonomy using neonUtilities : 
 
@@ -78,14 +78,16 @@ tree_species <- plant_taxa %>% dplyr::filter(x="wood")
 
 ### Using neonStore 
 
-The [neonStore](https://cran.r-project.org/package=neonstore) R package is not from NEON, bhut from Dr. Carl Boettiger, Berkeley although one of the authors is Clair Lunch from NEON/Batelle who is primary author of the neonUtilities pacakge. 
+The [neonStore](https://cran.r-project.org/package=neonstore) R package comes from [Carl Boettiger @ Berkeley](https://www.carlboettiger.info/) although one of the authors is Clair Lunch from NEON/Batelle who is primary author of the neonUtilities pacakge. 
 
 
 The goal of  [neonStore](https://cran.r-project.org/package=neonstore) is to simplify the download and access process by always saving the results to the disk, to provide a cache system where you can require a NEON data product and it won't re-download if you already have it, and lastly use a SQL database to make querying the data fast.  
 
-The main different between neonUtilities is that there is a folder where the data is automaatically saved.  There is a way you may save this configuraion, and also a way to store your NEON token once so you don't have to put it in every function call (and keep it out of your code that may end up in a git repository).
+There are several  advantages over neonUtilities are, 1) there is a folder where the data is automatically saved and 2) data may be loaded into a SQL database for querying without loading into memory.   There is a way you may save this configuration, and also a way to store your NEON token once so you don't have to put it in every function call (and keep it out of your code that may end up in a git repository).    In addition, you may find product IDs by theme or taxonomic group (e.g. "BIRDS").
 
-The github repository has links to vignettes : https://github.com/cboettig/neonstore
+The github repository has links to vignettes which may explain best : https://github.com/cboettig/neonstore
+
+This may be a step much easier to use as a wrapper to neonUtilities.   
 
 
 ### Using the NeonDivData R Package
@@ -163,4 +165,4 @@ Output (spring 2021):
 
 ## NEON MetaData
 
-NEON data comes with extensive metadata and README files.   neonDivData does not have a link to these or to product codes, but it's essential to read them to appreciate any caveats or updates/fixes.     
+NEON data comes with extensive metadata and README files.   neonDivData does not have a link to these or to product codes or the README files, but it's essential to read them to appreciate any caveats or updates/fixes.       
