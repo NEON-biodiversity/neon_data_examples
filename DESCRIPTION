@@ -1,0 +1,15 @@
+Package: neon_data_examples
+Title: Examples of Using NEON data with the MSB Project
+Version: 0.0.1
+Authors@R: 
+    person(given = "Patrick",
+           family = "Bills",
+           role = c("aut", "cre"),
+           email = "billspat@msu.edu",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: This package is simply some example code and documentation for using NEON.  It's meant to be downloaded from source to review the code. 
+License: `use_gpl3_license()`
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1

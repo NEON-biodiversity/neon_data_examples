@@ -1,0 +1,6 @@
+# local location for the neonstore package
+NEONSTORE_HOME=data/neonstore
+# api token
+NEON_TOKEN=<put your neon token here>
+# location to store project data
+NEON_ROOT_FOLDER="/Volumes/GoogleDrive/Shared drives/MacrosystemsBiodiversity/data/"

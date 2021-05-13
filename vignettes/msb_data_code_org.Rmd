@@ -1,0 +1,21 @@
+---
+title: "MacrroSystems Biology Project Data and Code Organization"
+author: "Patrick Bills and Phoebe Zarnetske"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Using NEON Data with the MSB Project
+
+This is a placeholder to create a Rmd with the example functions in the R folder (`neondivdata_example.R`). 
