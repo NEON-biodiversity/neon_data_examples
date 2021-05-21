@@ -36,9 +36,17 @@ prods_by_keyword <- function(keyword, code_only=TRUE) {
     if(code_only){
         products()[i, c("productCode")]
     } else {
-        products()[i, c("productCode", "productName","productCategory")]
+        products()[i, c("productCode", "productName","productCategory", "productDescription")]
     }
 
+}
+
+prods_by_keyword_with_descripton <- function(keyword ){
+    # prods_by_keyword returns a data fraame - convert to vector
+    prod_code_list <- as.vector(prods_by_keyword(keyword)$productCode)
+    # filter on prod codes above, and return code and description (so it can be read)
+    products() %>% filter(productCode %in% prod_code_list ) %>%
+            select(productCode, productDescription)
 }
 
 #' get the product code for Birds
@@ -69,6 +77,11 @@ storeBirdData <- function(neon_token = get_neon_token()){
     # return(loadByProduct(birdProductCode(), token = get_api_key()))
 }
 
+mammal_traplevel <- function(){
+    # got this from using prods_by_keyword_with_descripton('mammals') above
+    mammal_prod_code <- "DP1.10072.001"
+
+}
 
 birds <- function() {
     storeBirdData()
