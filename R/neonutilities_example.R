@@ -9,8 +9,9 @@ taxonTypes <- unlist(strsplit("ALGAE, BEETLE, BIRD, FISH, HERPETOLOGY, MACROINVE
 #' and puts it into a variable, and this saves that as Rdata into the folder of your choice
 #'
 #' @param product_code Neon standard product code
+#' @param neon_downloads_path Folder or folders path where to store neon downloads in the root folder
 #' @return path to the file that was saved
-pull_neon_to_projectfolder<-function(product_code = "DP1.10003.001"){
+pull_neon_to_projectfolder<-function(product_code = "DP1.10003.001", neon_downloads_path = "neon_downloads"){
 
     # pull all data from neon for this product code (birds), using token from environment
     print("downloading all data, this may take a while")
@@ -18,8 +19,13 @@ pull_neon_to_projectfolder<-function(product_code = "DP1.10003.001"){
     neondata <- loadByProduct(product_code, check.size = F, nCores = 2, token = get_neon_token())
 
     # create some file name and path based on
+    # file name is just the product ID code
     product_filename = paste0(product_code, ".Rdata")
-    product_path=file.path(Sys.getenv("NEON_ROOT_FOLDER"), product_filename)
+    # the folder where the path goes is a combo of root folder, a "downloads folder" , and a file name
+    product_path=file.path(
+            Sys.getenv("NEON_ROOT_FOLDER"),
+            neon_downloads_path,
+            product_filename)
 
     print(paste("saving", product_code, "to", product_path))
     # assumes that the drive specified in Renviron is mounted/active
@@ -42,11 +48,14 @@ read_saved_neon_data <-function(product_code) {
 }
 
 save_mammal_trap_data <- function(){
+
     # found this from using prods_by_keyword_with_descripton('mammals') in neonstore_example
     mammal_prod_code <- "DP1.10072.001"
     #
     pull_neon_to_projectfolder(mammal_prod_code)
 
+
 }
+
 
 
