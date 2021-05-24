@@ -56,9 +56,17 @@ pull_neon_to_projectfolder<-function(product_code = "DP1.10003.001", neon_downlo
 read_saved_neon_data <-function(product_code) {
     product_path=standard_neon_file_path(product_code)
     if(file.exists(product_path)){
-        load(product_path, verbose=TRUE)
-        print("neondata loaded")
+        varnames<- load(product_path, verbose=TRUE)
+        # check if neondata in this varnames
+        if("neondata" %in% varnames) {
+            print("neondata loaded")
+            return(neondata)
+        } else {
+            warning(paste("neon data file not loaded", product_path))
+            return(NULL)
+        }
     }
+
 }
 
 #' saves to the one of the data items from a Neon product to our L0 folder
@@ -73,32 +81,38 @@ save_neon_csv <- function(neon_prod_code, neon_dataframe_name){
 
 
     # create standard file name and path
-    neon_prorduct_file <- standard_neon_file_path(neon_prod_code)
+    neon_product_file <- standard_neon_file_path(neon_prod_code)
     # if the file doesn't exist in folder, download it via neon utilities
-    if(! file.exists(neon_prorduct_file)) {
+    if(! file.exists(neon_product_file)) {
         # this function returns the data list
-        mammal_data <- pull_neon_to_projectfolder(neon_prod_code)
+        neondata <- pull_neon_to_projectfolder(neon_prod_code)
     } else {
-        # file already exists, so read it in
-        mammal_data <- read_saved_neon_data(neon_prorduct_file)
+        # file already exists, so read it in as "neondata"
+        neondata <- read_saved_neon_data(neon_prod_code)
     }
 
     # now just write the part we need to L0 folder
-    L0_file_path<- file.path(sys.getenv("NEON_ROOT_FOLDER"),
-        "neon_organism",
-        neon_dataframe_name)
+    L0_file_path<- file.path(Sys.getenv("NEON_ROOT_FOLDER"),
+        "neon_observations",
+        paste0(neon_dataframe_name, ".csv")
+    )
 
     # neon data products are lists - select just the per trapa csv, and save to disk
-    write.csv(neon_prorduct_file[[neon_dataframe_name]], file=L0_file_path)
+    write.csv(neondata[[neon_dataframe_name]], file=L0_file_path)
     if(file.exists(L0_file_path)) { print(paste("success! wrote csv to", L0_file_path)) }
 
     return(L0_file_path)
 
 }
 
+#' one-off function to demonstrate and record how to save mammal trap data
+#' using genericized save_neon_csv() function.
+#' @return full path to newly saved file, which could opened with `read.csv()`
 save_mammal_trap_csv <- function(){
-    save_neon_csv(neon_prod_code = "DP1.10072.001",
+    mammal_file <- save_neon_csv(neon_prod_code = "DP1.10072.001",
                   neon_dataframe_name= "mam_pertrapnight")
+    return(mammal_file)
+
 }
 
 
