@@ -124,7 +124,7 @@ save_taxon_csv<- function(taxonTypeCode, taxa_folder="neon_taxa" ){
     taxa_path <- file.path(Sys.getenv("NEON_ROOT_FOLDER"),taxa_folder)
     if(dir.exists(taxa_path)){
         taxa_file_path = file.path(taxa_path, taxa_file_name)
-        write.csv(taxa_table, file=taxa_file_path)
+        write.csv(taxa_table, file=taxa_file_path, row.names=FALSE)
         print(paste("successfully wrote file ", taxa_file_path))
         return(taxa_file_path)
     } else {
