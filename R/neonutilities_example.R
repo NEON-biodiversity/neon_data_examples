@@ -115,4 +115,30 @@ save_mammal_trap_csv <- function(){
 
 }
 
+#' simple wrapper to get taxon table from neonUtilities and save it to Google drive
+#' useful to 1) freeze current taxon list we use as aa project 2) don't re-download from NEON every time
+#' However in your own code you could get this table by simply using `fish_taxa<- neonUtilities::getTaxonTable('FISH')`
+save_taxon_csv<- function(taxonTypeCode, taxa_folder="neon_taxa" ){
+    taxa_table <- getTaxonTable(toupper(taxonTypeCode)) # must be upper case
+    taxa_file_name <- paste0(tolower(taxonTypeCode), "_taxonomy.csv")
+    taxa_path <- file.path(Sys.getenv("NEON_ROOT_FOLDER"),taxa_folder)
+    if(dir.exists(taxa_path)){
+        taxa_file_path = file.path(taxa_path, taxa_file_name)
+        write.csv(taxa_table, file=taxa_file_path)
+        print(paste("successfully wrote file ", taxa_file_path))
+        return(taxa_file_path)
+    } else {
+        warning(paste("taxa folder does not exist", taxa_path))
+        return(NULL)
+    }
+}
+
+save_all_taxa_tables <- function(){
+    for(taxonTypeCode in taxonTypes){
+        print(taxonTypeCode)
+        save_taxon_csv(taxonTypeCode)
+
+    }
+}
+
 
