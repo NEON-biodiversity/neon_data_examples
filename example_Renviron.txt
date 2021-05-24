@@ -2,5 +2,9 @@
 NEONSTORE_HOME=data/neonstore
 # api token
 NEON_TOKEN=<put your neon token here>
-# location to store project data
-NEON_ROOT_FOLDER="/Volumes/GoogleDrive/Shared drives/MacrosystemsBiodiversity/data/"
+# location to store NEON data files for your project
+# note this is just for NEON L0 data, so it has L0 in the path
+NEON_ROOT_FOLDER="/Volumes/GoogleDrive/Shared drives/MacrosystemsBiodiversity/data/organism/L0"
+
+# another example configuration would be folder for the whole projet (incl. L1, L2)
+PROJECT_ROOT_FOLDER="/Volumes/GoogleDrive/Shared drives/MacrosystemsBiodiversity/data/organism/"
