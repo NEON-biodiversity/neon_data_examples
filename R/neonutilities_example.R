@@ -98,11 +98,20 @@ save_neon_csv <- function(neon_prod_code, neon_dataframe_name){
     )
 
     # neon data products are lists - select just the per trapa csv, and save to disk
-    write.csv(neondata[[neon_dataframe_name]], file=L0_file_path)
+    write.csv(neondata[[neon_dataframe_name]], file=L0_file_path, row.names = FALSE)
     if(file.exists(L0_file_path)) { print(paste("success! wrote csv to", L0_file_path)) }
 
     return(L0_file_path)
 
+}
+
+read_csv_file <- function(){
+
+    # now just write the part we need to L0 folder
+    L0_file_path<- file.path(Sys.getenv("NEON_ROOT_FOLDER"),
+                             "neon_observations",
+                             paste0(neon_dataframe_name, ".csv")
+    )
 }
 
 #' one-off function to demonstrate and record how to save mammal trap data
@@ -114,6 +123,7 @@ save_mammal_trap_csv <- function(){
     return(mammal_file)
 
 }
+
 
 #' simple wrapper to get taxon table from neonUtilities and save it to Google drive
 #' useful to 1) freeze current taxon list we use as aa project 2) don't re-download from NEON every time
