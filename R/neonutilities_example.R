@@ -2,6 +2,8 @@
 # this should correspond to our workflow doc
 
 library(neonUtilities)
+library(dplyr)
+
 
 # functions to read your neon api token from the environment
 # see the readme for more info
@@ -75,7 +77,7 @@ read_saved_neon_data <-function(product_code) {
 #' @param neon_dataframe_name the name of the item in the list that neon_utilities creates that
 #'                            data frame of interest
 #'
-save_neon_csv <- function(neon_prod_code, neon_dataframe_name){
+save_neon_csv <- function(neon_prod_code, neon_dataframe_name, provisional=FALSE){
 
     # found this from using prods_by_keyword_with_descripton('mammals') in neonstore_example
 
@@ -97,8 +99,22 @@ save_neon_csv <- function(neon_prod_code, neon_dataframe_name){
         paste0(neon_dataframe_name, ".csv")
     )
 
+
+    # TODO check if neondata[[neon_dataframe_name]] actually in
+    if(!neon_dataframe_name %in% names(neondata) ) {
+        warning(paste(neon_dataframe_name, "not found in neon product data"))
+        return(NULL)
+    }
+
+    neon_obs_data <- neondata[[neon_dataframe_name]]
+
+    # filter out provisional data
+    if(provisional==FALSE){
+        neon_obs_data <- neon_obs_data[neon_obs_data$release != "PROVISIONAL",]
+    }
+
     # neon data products are lists - select just the per trapa csv, and save to disk
-    write.csv(neondata[[neon_dataframe_name]], file=L0_file_path, row.names = FALSE)
+    write.csv(neon_obs_data, file=L0_file_path, row.names = FALSE)
     if(file.exists(L0_file_path)) { print(paste("success! wrote csv to", L0_file_path)) }
 
     return(L0_file_path)
@@ -151,4 +167,36 @@ save_all_taxa_tables <- function(){
     }
 }
 
+### SPATIAL
+library(jsonlite)
+library(httr)
+#' pull current coordinates via the NEON API.
+#' note these are in the neonDivData `neonsites` data package
+get_neon_site_coordinates_from_api<- function(){
+    site_locs <- GET('http://data.neonscience.org/api/v0/locations/sites') %>%
+        content(as = 'text') %>%
+        fromJSON(simplifyDataFrame = TRUE, flatten = TRUE)
+
+    # remove NAs - why are there NAs?
+    site_locs <- site_locs$data[,1:19] %>%
+        filter(!is.na(locationDecimalLatitude) & !is.na(locationDecimalLongitude))
+
+    # pull just the coordinates from the locs
+    site_coords <- site_locs %>%
+        dplyr::select(locationName, locationDecimalLongitude, locationDecimalLatitude, locationElevation) %>%
+        setNames(c('siteID', 'lon', 'lat', 'elevation'))
+
+    return(site_coords)
+}
+
+#' save the NEON site coordinates to google drive for re-use
+#' this should only have to run once, saved as function for documentation
+write_neon_site_coords<- function(){
+    site.df <- get_neon_site_coordinates_from_api()
+    site_file_name <- "neon_site_coords.csv"
+    site_file_path <- file.path(Sys.getenv("NEON_ROOT_FOLDER"),"spatial_data",site_file_name )
+    write.csv(site.df, file=site_file_path, row.names=FALSE)
+    if(file.exists(site_file_path)){ print( paste("site file coordinate file saved as ", site_file_path))}
+    return(site_file_path)
+}
 
